@@ -1,4 +1,4 @@
-Software for _Celestial Calculations_ is provided in three flavors: Java, Python 3, and Visual Basic. You may use whichever programming language you prefer, or even all three. The programs are identical regardless of which language(s) you elect to use. Installation is simple and straightforward.
+Software for [_Celestial Calculations_](https://mitpress.mit.edu/books/celestial-calculations) is provided in three flavors: Java, Python 3, and Visual Basic. You may use whichever programming language you prefer, or even all three. The programs are identical regardless of which language(s) you elect to use. Installation is simple and straightforward.
 
 # Install the Executables and Data Files
 1. Download the "executables and data" zip file from the repository to your local machine.
