@@ -1,6 +1,6 @@
 The software and data in this repository are for the book [_Celestial Calculations: A Gentle Introduction to Computational Astronomy_](https://mitpress.mit.edu/books/celestial-calculations) by J. L. Lawrence, PhD and published by The MIT Press. The book contains the chapters listed below, while the software in this repository are programs that demonstrate the book's various concepts and algorithms.
 
-Read endorsements for the book and purchase it from MIT Press at https://mitpress.mit.edu/books/celestial-calculations.
+Read endorsements for the book and purchase it from MIT Press at [](https://mitpress.mit.edu/books/celestial-calculations).
 
 ## 1 Introduction
 Astronomy may well be the oldest science with archaeological findings from around the world demonstrating that the heavens have occupied mankind's thoughts from the very dawn of civilization. With only primitive tools and a rudimentary understanding of mathematics, the ancient Greeks learned how to predict the position of the planets and even made early estimates of the distance to the Sun, Moon, and stars. Astronomy, however, has come a long way since those early beginnings. With the advent of the personal computer, amateurs today can make astronomical calculations and predictions that the ancients could only dream of.
