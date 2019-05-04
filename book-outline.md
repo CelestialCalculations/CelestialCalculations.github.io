@@ -1,4 +1,4 @@
-The softwaredddd and data in this repository are for the book [_Celestial Calculations: A Gentle Introduction to Computational Astronomy_](https://mitpress.mit.edu/books/celestial-calculations) by J. L. Lawrence, PhD and published by The MIT Press. The book contains the chapters listed below, while the software in this repository are programs that demonstrate the book's various concepts and algorithms.
+The software and data in this repository are for the book [_Celestial Calculations: A Gentle Introduction to Computational Astronomy_](https://mitpress.mit.edu/books/celestial-calculations) by J. L. Lawrence, PhD and published by The MIT Press. The book contains the chapters listed below, while the software in this repository are programs that demonstrate the book's various concepts and algorithms.
 
 Read endorsements for the book and purchase it from MIT Press at [https://mitpress.mit.edu/books/celestial-calculations](https://mitpress.mit.edu/books/celestial-calculations).
 
