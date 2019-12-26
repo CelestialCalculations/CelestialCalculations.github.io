@@ -1,1 +1,13 @@
 _site/
+
+# the data folder
+Ast\ Progs\ And\ Data/
+
+# java implementation
+Java/
+
+# Python implementation
+Python/
+
+# Visual Basic
+Visual\ Basic/
