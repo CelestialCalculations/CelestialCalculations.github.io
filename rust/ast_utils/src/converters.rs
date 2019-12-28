@@ -1,6 +1,6 @@
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum DistanceUnit {
     Millimeter,
     Centimeter,
@@ -45,64 +45,193 @@ impl MetricScale<f64> for f64 {
     }
 }
 
-trait MetricConvertable {
-    fn to_metric(&self, to_unit: DistanceUnit) -> Result<f64, &str>;
+pub trait HasConvertableUnit {
+    fn scalar(&self) -> f64;
+    fn unit(&self) -> &DistanceUnit;
+    // conversion functions
+    fn convert_scalar<'a>(&self, to_unit: &DistanceUnit) -> Result<f64, &'a str>;
+    fn convert<'a>(&self, to_unit: DistanceUnit) -> Result<Box<dyn HasConvertableUnit>, &'a str> {
+        self.convert_scalar(&to_unit)
+            .and_then(|s| Ok(DistanceFactory::build(s, to_unit)))
+    }
 }
 
-#[derive(Debug)]
-struct Distance {
+pub struct Millimeter {
     value: f64,
     unit: DistanceUnit,
 }
 
-impl Distance {
-    pub fn new(value: f64, unit: DistanceUnit) -> Self {
-        Distance { value, unit }
-    }
-
-    pub fn unit(&self) -> &DistanceUnit {
-        &self.unit
+impl Millimeter {
+    pub fn new(value: f64) -> Millimeter {
+        Millimeter {
+            value: value,
+            unit: DistanceUnit::Millimeter,
+        }
     }
 }
 
-impl MetricConvertable for Distance {
-    fn to_metric(&self, to_unit: DistanceUnit) -> Result<f64, &str> {
-        let value = self.value;
-        if value == 0.0 {
-            return Ok(value);
-        }
+impl HasConvertableUnit for Millimeter {
+    fn scalar(&self) -> f64 {
+        self.value
+    }
 
-        match self.unit {
-            DistanceUnit::Millimeter => match to_unit {
-                DistanceUnit::Millimeter => Ok(value),
-                DistanceUnit::Centimeter => Ok(value.pow10(-1)),
-                DistanceUnit::Meter => Ok(value.pow10(-3)),
-                DistanceUnit::Kilometer => Ok(value.pow10(-6)),
-                _ => Err("no rules to convert it from Millimeter"),
-            },
-            DistanceUnit::Centimeter => match to_unit {
-                DistanceUnit::Millimeter => Ok(value.pow10(1)),
-                DistanceUnit::Centimeter => Ok(value),
-                DistanceUnit::Meter => Ok(value.pow10(-2)),
-                DistanceUnit::Kilometer => Ok(value.pow10(-5)),
-                _ => Err("no rules to convert X from Centimeter"),
-            },
-            DistanceUnit::Meter => match to_unit {
-                DistanceUnit::Millimeter => Ok(value.pow10(3)),
-                DistanceUnit::Centimeter => Ok(value.pow10(2)),
-                DistanceUnit::Meter => Ok(value),
-                DistanceUnit::Kilometer => Ok(value.pow10(-3)),
-                _ => Err("no rules to convert X from Meter"),
-            },
-            DistanceUnit::Kilometer => match to_unit {
-                DistanceUnit::Millimeter => Ok(value.pow10(6)),
-                DistanceUnit::Centimeter => Ok(value.pow10(5)),
-                DistanceUnit::Meter => Ok(value.pow10(3)),
-                DistanceUnit::Kilometer => Ok(value),
-                _ => Err("no rules to convert X from Kilometer"),
-            },
-            _ => Err("can not convert metric distance to x"),
+    fn unit(&self) -> &DistanceUnit {
+        &self.unit
+    }
+
+    fn convert_scalar<'a>(&self, to_unit: &DistanceUnit) -> Result<f64, &'a str> {
+        match to_unit {
+            DistanceUnit::Millimeter => Ok(self.value),
+            DistanceUnit::Centimeter => Ok(self.value.pow10(-1)),
+            DistanceUnit::Meter => Ok(self.value.pow10(-3)),
+            DistanceUnit::Kilometer => Ok(self.value.pow10(-6)),
+            _ => Err("Millimeter misses some distances"),
         }
+    }
+}
+
+// Centimeter
+
+pub struct Centimeter {
+    value: f64,
+    unit: DistanceUnit,
+}
+
+impl Centimeter {
+    pub fn new(value: f64) -> Centimeter {
+        Centimeter {
+            value: value,
+            unit: DistanceUnit::Centimeter,
+        }
+    }
+}
+
+impl HasConvertableUnit for Centimeter {
+    fn scalar(&self) -> f64 {
+        self.value
+    }
+
+    fn unit(&self) -> &DistanceUnit {
+        &self.unit
+    }
+
+    fn convert_scalar<'a>(&self, to_unit: &DistanceUnit) -> Result<f64, &'a str> {
+        match to_unit {
+            DistanceUnit::Millimeter => Ok(self.value.pow10(1)),
+            DistanceUnit::Centimeter => Ok(self.value),
+            DistanceUnit::Meter => Ok(self.value.pow10(-2)),
+            DistanceUnit::Kilometer => Ok(self.value.pow10(-5)),
+            _ => Err("Can not convert from Centimeter"),
+        }
+    }
+}
+
+// mod: Meter
+
+pub struct Meter {
+    value: f64,
+    unit: DistanceUnit,
+}
+
+impl Meter {
+    pub fn new(value: f64) -> Meter {
+        Meter {
+            value: value,
+            unit: DistanceUnit::Meter,
+        }
+    }
+}
+
+impl HasConvertableUnit for Meter {
+    fn scalar(&self) -> f64 {
+        self.value
+    }
+
+    fn unit(&self) -> &DistanceUnit {
+        &self.unit
+    }
+
+    fn convert_scalar<'a>(&self, to_unit: &DistanceUnit) -> Result<f64, &'a str> {
+        let value = self.value;
+
+        match to_unit {
+            DistanceUnit::Millimeter => Ok(value.pow10(3)),
+            DistanceUnit::Centimeter => Ok(value.pow10(2)),
+            DistanceUnit::Meter => Ok(value),
+            DistanceUnit::Kilometer => Ok(value.pow10(-3)),
+            _ => Err("Can not convert from meter"),
+        }
+    }
+}
+
+// mod kilometer.rs
+pub struct Kilometer {
+    value: f64,
+    unit: DistanceUnit,
+}
+
+impl Kilometer {
+    pub fn new(value: f64) -> Kilometer {
+        Kilometer {
+            value: value,
+            unit: DistanceUnit::Kilometer,
+        }
+    }
+}
+
+impl HasConvertableUnit for Kilometer {
+    fn scalar(&self) -> f64 {
+        self.value
+    }
+
+    fn unit(&self) -> &DistanceUnit {
+        &self.unit
+    }
+
+    fn convert_scalar<'a>(&self, to_unit: &DistanceUnit) -> Result<f64, &'a str> {
+        let value = self.value;
+
+        match to_unit {
+            DistanceUnit::Millimeter => Ok(value.pow10(6)),
+            DistanceUnit::Centimeter => Ok(value.pow10(5)),
+            DistanceUnit::Meter => Ok(value.pow10(3)),
+            DistanceUnit::Kilometer => Ok(value),
+            _ => Err("Can not convert from Kilometer"),
+        }
+    }
+}
+
+// mod: DistanceConverter
+struct DistanceFactory {}
+
+impl DistanceFactory {
+    pub fn build(value: f64, unit: DistanceUnit) -> Box<dyn HasConvertableUnit> {
+        match unit {
+            DistanceUnit::Millimeter => Box::new(Millimeter::new(value)),
+            DistanceUnit::Centimeter => Box::new(Centimeter::new(value)),
+            DistanceUnit::Meter => Box::new(Meter::new(value)),
+            DistanceUnit::Kilometer => Box::new(Kilometer::new(value)),
+            _ => panic!("unimplemented distance unit: {}", unit),
+        }
+    }
+}
+
+struct DistanceConverter {
+    distance: Box<dyn HasConvertableUnit>,
+    error: Option<String>,
+}
+
+impl DistanceConverter {
+    pub fn new(value: f64, unit: DistanceUnit) -> DistanceConverter {
+        let distance = DistanceFactory::build(value, unit);
+        DistanceConverter {
+            distance: distance,
+            error: None,
+        }
+    }
+
+    pub fn convert(&self, to_unit: DistanceUnit) -> Result<Box<dyn HasConvertableUnit>, &str> {
+        self.distance.as_ref().convert(to_unit)
     }
 }
 
@@ -118,8 +247,7 @@ mod tests {
 
     #[test]
     fn test_0millimeters_to_centimeters() {
-        let mm = Distance::new(0.0, DistanceUnit::Millimeter);
-        let res = mm.to_metric(DistanceUnit::Centimeter);
+        let res = Millimeter::new(0.0).convert_scalar(&DistanceUnit::Centimeter);
 
         assert!(res.is_ok());
         assert!(is_close(0.0, res.unwrap()));
@@ -127,8 +255,7 @@ mod tests {
 
     #[test]
     fn test_millimeters_to_millimeter() {
-        let mm = Distance::new(1.0, DistanceUnit::Millimeter);
-        let res = mm.to_metric(DistanceUnit::Millimeter);
+        let res = Millimeter::new(1.0).convert_scalar(&DistanceUnit::Millimeter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -136,8 +263,7 @@ mod tests {
 
     #[test]
     fn test_millimeters_to_centimeter() {
-        let mm = Distance::new(10.0, DistanceUnit::Millimeter);
-        let res = mm.to_metric(DistanceUnit::Centimeter);
+        let res = Millimeter::new(10.0).convert_scalar(&DistanceUnit::Centimeter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -145,8 +271,7 @@ mod tests {
 
     #[test]
     fn test_millimeters_to_meter() {
-        let mm = Distance::new(1000.0, DistanceUnit::Millimeter);
-        let res = mm.to_metric(DistanceUnit::Meter);
+        let res = Millimeter::new(1000.0).convert_scalar(&DistanceUnit::Meter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -154,8 +279,7 @@ mod tests {
 
     #[test]
     fn test_millimeters_to_kilometer() {
-        let mm = Distance::new(1_000_000.0, DistanceUnit::Millimeter);
-        let res = mm.to_metric(DistanceUnit::Kilometer);
+        let res = Millimeter::new(1_000_000.0).convert_scalar(&DistanceUnit::Kilometer);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -164,8 +288,7 @@ mod tests {
     // centimeters
     #[test]
     fn test_centimeters_to_millimeter() {
-        let cm = Distance::new(0.1, DistanceUnit::Centimeter);
-        let res = cm.to_metric(DistanceUnit::Millimeter);
+        let res = Centimeter::new(0.1).convert_scalar(&DistanceUnit::Millimeter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -173,8 +296,7 @@ mod tests {
 
     #[test]
     fn test_centimeters_to_centimeter() {
-        let mm = Distance::new(1.0, DistanceUnit::Centimeter);
-        let res = mm.to_metric(DistanceUnit::Centimeter);
+        let res = Centimeter::new(1.0).convert_scalar(&DistanceUnit::Centimeter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -182,8 +304,7 @@ mod tests {
 
     #[test]
     fn test_centimeters_to_meter() {
-        let mm = Distance::new(100.0, DistanceUnit::Centimeter);
-        let res = mm.to_metric(DistanceUnit::Meter);
+        let res = Centimeter::new(100.0).convert_scalar(&DistanceUnit::Meter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -191,8 +312,7 @@ mod tests {
 
     #[test]
     fn test_centimeters_to_kilometer() {
-        let mm = Distance::new(100_000.0, DistanceUnit::Centimeter);
-        let res = mm.to_metric(DistanceUnit::Kilometer);
+        let res = Centimeter::new(100_000.0).convert_scalar(&DistanceUnit::Kilometer);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -201,8 +321,7 @@ mod tests {
     // meters
     #[test]
     fn test_meters_to_millimeter() {
-        let mm = Distance::new(0.001, DistanceUnit::Meter);
-        let res = mm.to_metric(DistanceUnit::Millimeter);
+        let res = Meter::new(0.001).convert_scalar(&DistanceUnit::Millimeter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -210,8 +329,7 @@ mod tests {
 
     #[test]
     fn test_meters_to_centimeter() {
-        let mm = Distance::new(0.01, DistanceUnit::Meter);
-        let res = mm.to_metric(DistanceUnit::Centimeter);
+        let res = Meter::new(0.01).convert_scalar(&DistanceUnit::Centimeter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -219,8 +337,7 @@ mod tests {
 
     #[test]
     fn test_meters_to_meter() {
-        let mm = Distance::new(1.0, DistanceUnit::Meter);
-        let res = mm.to_metric(DistanceUnit::Meter);
+        let res = Meter::new(1.0).convert_scalar(&DistanceUnit::Meter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -228,8 +345,7 @@ mod tests {
 
     #[test]
     fn test_meters_to_kilometer() {
-        let mm = Distance::new(1000.0, DistanceUnit::Meter);
-        let res = mm.to_metric(DistanceUnit::Kilometer);
+        let res = Meter::new(1000.0).convert_scalar(&DistanceUnit::Kilometer);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -238,8 +354,7 @@ mod tests {
     // kilometers to metric units
     #[test]
     fn test_kilometers_to_millimeter() {
-        let mm = Distance::new(1.0e-6, DistanceUnit::Kilometer);
-        let res = mm.to_metric(DistanceUnit::Millimeter);
+        let res = Kilometer::new(1.0e-6).convert_scalar(&DistanceUnit::Millimeter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -247,8 +362,7 @@ mod tests {
 
     #[test]
     fn test_kilometers_to_centimeter() {
-        let mm = Distance::new(1.0e-5, DistanceUnit::Kilometer);
-        let res = mm.to_metric(DistanceUnit::Centimeter);
+        let res = Kilometer::new(1.0e-5).convert_scalar(&DistanceUnit::Centimeter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -256,8 +370,7 @@ mod tests {
 
     #[test]
     fn test_kilometers_to_meter() {
-        let mm = Distance::new(1.0e-3, DistanceUnit::Kilometer);
-        let res = mm.to_metric(DistanceUnit::Meter);
+        let res = Kilometer::new(1.0e-3).convert_scalar(&DistanceUnit::Meter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
@@ -265,10 +378,53 @@ mod tests {
 
     #[test]
     fn test_kilometers_to_kilometer() {
-        let mm = Distance::new(1.0, DistanceUnit::Kilometer);
-        let res = mm.to_metric(DistanceUnit::Kilometer);
+        let res = Kilometer::new(1.0).convert_scalar(&DistanceUnit::Kilometer);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
+    }
+
+    #[test]
+    fn test_distance_converter_from_mm_to_mm() {
+        let conv = DistanceConverter::new(1.0, DistanceUnit::Millimeter);
+        let res = conv.convert(DistanceUnit::Millimeter);
+
+        assert!(res.is_ok());
+        let res = res.unwrap();
+        assert!(is_close(1.0, res.scalar()));
+        assert_eq!(&DistanceUnit::Millimeter, res.unit());
+    }
+
+    #[test]
+    fn test_distance_converter_from_mm_to_cm() {
+        let conv = DistanceConverter::new(10.0, DistanceUnit::Millimeter);
+        let res = conv.convert(DistanceUnit::Centimeter);
+
+        assert!(res.is_ok());
+        let res = res.unwrap();
+        assert!(is_close(1.0, res.scalar()));
+        assert_eq!(&DistanceUnit::Centimeter, res.unit());
+    }
+
+    #[test]
+    fn test_distance_converter_from_mm_to_meter() {
+        let conv = DistanceConverter::new(1000.0, DistanceUnit::Millimeter);
+        let res = conv.convert(DistanceUnit::Meter);
+
+        assert!(res.is_ok());
+        let res = res.unwrap();
+        assert!(is_close(1.0, res.scalar()));
+        assert_eq!(&DistanceUnit::Meter, res.unit());
+    }
+
+    #[test]
+    fn test_distance_converter_from_mm_to_kmeter() {
+        let conv = DistanceConverter::new(1_000_000.0, DistanceUnit::Millimeter);
+        let res = conv.convert(DistanceUnit::Kilometer);
+
+        assert!(res.is_ok());
+        let res = res.unwrap();
+        assert!(is_close(1.0, res.scalar()));
+        assert_eq!(&DistanceUnit::Kilometer, res.unit());
     }
 }
