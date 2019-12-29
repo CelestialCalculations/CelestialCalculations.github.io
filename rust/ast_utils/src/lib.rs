@@ -1,4 +1,4 @@
-pub mod converters;
+pub mod distance;
 
 // simple re-usable helpers for unit tests
 mod unit_test_helpers;
