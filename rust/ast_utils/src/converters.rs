@@ -1,13 +1,19 @@
 use std::fmt;
 
 pub mod centimeter;
+pub mod feet;
+pub mod inch;
 pub mod kilometer;
 pub mod meter;
+pub mod mile;
 pub mod millimeter;
 
 pub use centimeter::Centimeter;
+pub use feet::Feet;
+pub use inch::Inch;
 pub use kilometer::Kilometer;
 pub use meter::Meter;
+pub use mile::Mile;
 pub use millimeter::Millimeter;
 
 #[derive(Debug, PartialEq)]
@@ -75,6 +81,9 @@ impl DistanceFactory {
             DistanceUnit::Centimeter => Box::new(Centimeter::new(value)),
             DistanceUnit::Meter => Box::new(Meter::new(value)),
             DistanceUnit::Kilometer => Box::new(Kilometer::new(value)),
+            DistanceUnit::Inch => Box::new(Inch::new(value)),
+            DistanceUnit::Feet => Box::new(Feet::new(value)),
+            DistanceUnit::Mile => Box::new(Mile::new(value)),
             _ => panic!("unimplemented distance unit: {}", unit),
         }
     }
@@ -142,5 +151,38 @@ mod tests {
         let res = res.unwrap();
         assert!(is_close(1.0, res.scalar()));
         assert_eq!(&DistanceUnit::Kilometer, res.unit());
+    }
+
+    #[test]
+    fn test_distance_converter_from_mm_to_inch() {
+        let conv = DistanceConverter::new(25.4, DistanceUnit::Millimeter);
+        let res = conv.convert(DistanceUnit::Inch);
+
+        assert!(res.is_ok());
+        let res = res.unwrap();
+        assert!(is_close(1.0, res.scalar()));
+        assert_eq!(&DistanceUnit::Inch, res.unit());
+    }
+
+    #[test]
+    fn test_distance_converter_from_meter_to_feet() {
+        let conv = DistanceConverter::new(0.3048, DistanceUnit::Meter);
+        let res = conv.convert(DistanceUnit::Feet);
+
+        assert!(res.is_ok());
+        let res = res.unwrap();
+        assert!(is_close(1.0, res.scalar()));
+        assert_eq!(&DistanceUnit::Feet, res.unit());
+    }
+
+    #[test]
+    fn test_distance_converter_from_kilometer_to_mile() {
+        let conv = DistanceConverter::new(1.609344, DistanceUnit::Kilometer);
+        let res = conv.convert(DistanceUnit::Mile);
+
+        assert!(res.is_ok());
+        let res = res.unwrap();
+        assert!(is_close(1.0, res.scalar()));
+        assert_eq!(&DistanceUnit::Mile, res.unit());
     }
 }

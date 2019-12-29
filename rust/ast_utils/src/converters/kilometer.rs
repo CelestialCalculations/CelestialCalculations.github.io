@@ -24,13 +24,18 @@ impl HasConvertableUnit for Kilometer {
     }
 
     fn convert_scalar<'a>(&self, to_unit: &DistanceUnit) -> Result<f64, &'a str> {
-        let value = self.value;
+        let value = self.scalar();
+
+        if value == 0.0 {
+            return Ok(0.0);
+        }
 
         match to_unit {
             DistanceUnit::Millimeter => Ok(value.pow10(6)),
             DistanceUnit::Centimeter => Ok(value.pow10(5)),
             DistanceUnit::Meter => Ok(value.pow10(3)),
             DistanceUnit::Kilometer => Ok(value),
+            DistanceUnit::Mile => Ok(value / 1.609344),
             _ => Err("Can not convert from Kilometer"),
         }
     }
@@ -67,6 +72,14 @@ mod tests {
     #[test]
     fn test_kilometers_to_kilometer() {
         let res = Kilometer::new(1.0).convert_scalar(&DistanceUnit::Kilometer);
+
+        assert!(res.is_ok());
+        assert!(is_close(1.0, res.unwrap()));
+    }
+
+    #[test]
+    fn test_kilometers_miles() {
+        let res = Kilometer::new(1.609344).convert_scalar(&DistanceUnit::Mile);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));
