@@ -8,7 +8,7 @@ pub struct Millimeter {
 impl Millimeter {
     pub fn new(value: f64) -> Millimeter {
         Millimeter {
-            value: value,
+            value,
             unit: DistanceUnit::Millimeter,
         }
     }
@@ -43,6 +43,7 @@ impl HasConvertableUnit for Millimeter {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::unit_test_helpers::*;

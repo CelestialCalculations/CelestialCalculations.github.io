@@ -36,6 +36,7 @@ impl HasConvertableUnit for Centimeter {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::unit_test_helpers::*;

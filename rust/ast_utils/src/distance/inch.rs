@@ -8,7 +8,7 @@ pub struct Inch {
 impl Inch {
     pub fn new(value: f64) -> Inch {
         Inch {
-            value: value,
+            value,
             unit: DistanceUnit::Inch,
         }
     }
@@ -36,6 +36,7 @@ impl HasConvertableUnit for Inch {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::unit_test_helpers::*;

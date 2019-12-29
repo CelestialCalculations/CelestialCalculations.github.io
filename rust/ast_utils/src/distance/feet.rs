@@ -8,7 +8,7 @@ pub struct Feet {
 impl Feet {
     pub fn new(value: f64) -> Feet {
         Feet {
-            value: value,
+            value,
             unit: DistanceUnit::Feet,
         }
     }
@@ -36,6 +36,7 @@ impl HasConvertableUnit for Feet {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::unit_test_helpers::*;
@@ -50,7 +51,7 @@ mod tests {
 
     #[test]
     fn test_feet_to_meters() {
-        let res = Feet::new(3.2808399).convert_scalar(&DistanceUnit::Meter);
+        let res = Feet::new(3.280_839_9).convert_scalar(&DistanceUnit::Meter);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));

@@ -8,7 +8,7 @@ pub struct Mile {
 impl Mile {
     pub fn new(value: f64) -> Mile {
         Mile {
-            value: value,
+            value,
             unit: DistanceUnit::Mile,
         }
     }
@@ -34,12 +34,13 @@ impl HasConvertableUnit for Mile {
 
         match to_unit {
             DistanceUnit::Mile => Ok(value),
-            DistanceUnit::Kilometer => Ok(value * 1.609344),
+            DistanceUnit::Kilometer => Ok(value * 1.609_344),
             _ => Err("not convertable from Mile"),
         }
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::unit_test_helpers::*;
@@ -54,7 +55,7 @@ mod tests {
 
     #[test]
     fn test_miles_to_kilometer() {
-        let res = Mile::new(0.62137119).convert_scalar(&DistanceUnit::Kilometer);
+        let res = Mile::new(0.621_371_19).convert_scalar(&DistanceUnit::Kilometer);
 
         assert!(res.is_ok());
         assert!(is_close(1.0, res.unwrap()));

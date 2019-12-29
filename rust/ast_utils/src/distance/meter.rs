@@ -8,7 +8,7 @@ pub struct Meter {
 impl Meter {
     pub fn new(value: f64) -> Meter {
         Meter {
-            value: value,
+            value,
             unit: DistanceUnit::Meter,
         }
     }
@@ -43,6 +43,7 @@ impl HasConvertableUnit for Meter {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::unit_test_helpers::*;
