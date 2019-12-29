@@ -15,6 +15,8 @@ impl Mile {
 }
 
 impl HasConvertableUnit for Mile {
+    type Unit = DistanceUnit;
+
     fn scalar(&self) -> f64 {
         self.value
     }

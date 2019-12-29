@@ -15,6 +15,8 @@ impl Millimeter {
 }
 
 impl HasConvertableUnit for Millimeter {
+    type Unit = DistanceUnit;
+
     fn scalar(&self) -> f64 {
         self.value
     }

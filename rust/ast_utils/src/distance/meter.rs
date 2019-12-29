@@ -15,6 +15,8 @@ impl Meter {
 }
 
 impl HasConvertableUnit for Meter {
+    type Unit = DistanceUnit;
+
     fn scalar(&self) -> f64 {
         self.value
     }

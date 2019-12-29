@@ -15,6 +15,8 @@ impl Kilometer {
 }
 
 impl HasConvertableUnit for Kilometer {
+    type Unit = DistanceUnit;
+
     fn scalar(&self) -> f64 {
         self.value
     }

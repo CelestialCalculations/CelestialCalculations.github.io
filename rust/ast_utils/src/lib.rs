@@ -1,4 +1,5 @@
 pub mod distance;
+pub mod traits;
 
 // simple re-usable helpers for unit tests
 mod unit_test_helpers;

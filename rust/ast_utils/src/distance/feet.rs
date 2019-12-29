@@ -15,6 +15,8 @@ impl Feet {
 }
 
 impl HasConvertableUnit for Feet {
+    type Unit = DistanceUnit;
+
     fn scalar(&self) -> f64 {
         self.value
     }

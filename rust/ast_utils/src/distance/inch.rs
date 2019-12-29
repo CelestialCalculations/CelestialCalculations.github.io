@@ -15,6 +15,8 @@ impl Inch {
 }
 
 impl HasConvertableUnit for Inch {
+    type Unit = DistanceUnit;
+
     fn scalar(&self) -> f64 {
         self.value
     }

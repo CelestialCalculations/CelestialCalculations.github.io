@@ -1,3 +1,4 @@
+use crate::traits::*;
 use std::fmt;
 
 pub mod centimeter;
@@ -50,32 +51,13 @@ impl fmt::Display for DistanceUnit {
     }
 }
 
-trait MetricScale<T: std::ops::Mul> {
-    fn pow10(&self, power: i32) -> T;
-}
-
-impl MetricScale<f64> for f64 {
-    fn pow10(&self, n: i32) -> f64 {
-        let scale = (10.0 as f64).powi(n);
-        self * scale
-    }
-}
-
-pub trait HasConvertableUnit {
-    fn scalar(&self) -> f64;
-    fn unit(&self) -> &DistanceUnit;
-    // conversion functions
-    fn convert_scalar<'a>(&self, to_unit: &DistanceUnit) -> Result<f64, &'a str>;
-    fn convert<'a>(&self, to_unit: DistanceUnit) -> Result<Box<dyn HasConvertableUnit>, &'a str> {
-        self.convert_scalar(&to_unit)
-            .and_then(|s| Ok(DistanceFactory::build(s, to_unit)))
-    }
-}
-
 struct DistanceFactory {}
 
 impl DistanceFactory {
-    pub fn build(value: f64, unit: DistanceUnit) -> Box<dyn HasConvertableUnit> {
+    pub fn build(
+        value: f64,
+        unit: DistanceUnit,
+    ) -> Box<dyn HasConvertableUnit<Unit = DistanceUnit>> {
         match unit {
             DistanceUnit::Millimeter => Box::new(Millimeter::new(value)),
             DistanceUnit::Centimeter => Box::new(Centimeter::new(value)),
@@ -90,7 +72,7 @@ impl DistanceFactory {
 }
 
 struct DistanceConverter {
-    distance: Box<dyn HasConvertableUnit>,
+    distance: Box<dyn HasConvertableUnit<Unit = DistanceUnit>>,
 }
 
 impl DistanceConverter {
@@ -98,9 +80,22 @@ impl DistanceConverter {
         let distance = DistanceFactory::build(value, unit);
         DistanceConverter { distance: distance }
     }
+}
 
-    pub fn convert(&self, to_unit: DistanceUnit) -> Result<Box<dyn HasConvertableUnit>, &str> {
-        self.distance.as_ref().convert(to_unit)
+impl CanConvertUnit for DistanceConverter {
+    type Unit = DistanceUnit;
+
+    fn convert<'a>(
+        &self,
+        to_unit: DistanceUnit,
+    ) -> Result<Box<dyn HasConvertableUnit<Unit = DistanceUnit>>, &'a str> {
+        if let Ok(val) = self.distance.as_ref().convert_scalar(&to_unit) {
+            let converted_distance = DistanceFactory::build(val, to_unit);
+
+            Ok(converted_distance)
+        } else {
+            Err("failed to convert the distance")
+        }
     }
 }
 

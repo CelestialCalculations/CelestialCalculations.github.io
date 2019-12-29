@@ -15,6 +15,8 @@ impl Centimeter {
 }
 
 impl HasConvertableUnit for Centimeter {
+    type Unit = DistanceUnit;
+
     fn scalar(&self) -> f64 {
         self.value
     }
