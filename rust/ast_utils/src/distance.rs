@@ -172,7 +172,7 @@ mod tests {
 
     #[test]
     fn test_distance_converter_from_kilometer_to_mile() {
-        let conv = DistanceConverter::new(1.609344, DistanceUnit::Kilometer);
+        let conv = DistanceConverter::new(1.609_344, DistanceUnit::Kilometer);
         let res = conv.convert(DistanceUnit::Mile);
 
         assert!(res.is_ok());

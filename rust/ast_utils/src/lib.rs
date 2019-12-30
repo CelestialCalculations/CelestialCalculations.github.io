@@ -1,4 +1,5 @@
 pub mod distance;
+pub mod temperature;
 pub mod traits;
 
 // simple re-usable helpers for unit tests
