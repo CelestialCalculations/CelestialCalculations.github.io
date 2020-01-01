@@ -2,8 +2,10 @@ use crate::traits::*;
 use std::fmt;
 
 pub mod dms;
+pub mod radian;
 
 use dms::DMS;
+use radian::Radian;
 
 #[derive(Debug, PartialEq)]
 pub enum AngularUnit {
