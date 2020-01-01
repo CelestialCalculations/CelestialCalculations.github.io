@@ -2,9 +2,11 @@ use crate::traits::*;
 use std::fmt;
 
 pub mod dms;
+pub mod hms;
 pub mod radian;
 
 use dms::DMS;
+use hms::HMS;
 use radian::Radian;
 
 #[derive(Debug, PartialEq)]

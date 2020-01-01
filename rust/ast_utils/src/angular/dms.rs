@@ -33,11 +33,11 @@ impl DMS {
         // step.5
         let seconds = 60.0 * ast_math::frac(min_fac);
 
-        DMS {
-            degree: (sign * degrees) as i16,
-            minute: minutes as u8,
-            second: seconds as u8,
-        }
+        DMS::new(
+            (sign * degrees).rem_euclid(360.0) as i16,
+            minutes as u8,
+            seconds as u8,
+        )
     }
 }
 
@@ -67,7 +67,7 @@ impl HasConvertableUnit for DMS {
         (sign as f64) * (degree + decimal_degs)
     }
 
-    // TODO: seems to be really to redundant
+    // TODO: seems to be really redundant
     fn unit(&self) -> &Self::Unit {
         &AngularUnit::DMS
     }
@@ -76,8 +76,11 @@ impl HasConvertableUnit for DMS {
         let value = self.scalar();
 
         match to_unit {
+            AngularUnit::DMS => Ok(value),
             AngularUnit::Radian => Ok(value * PI / 180.0),
             AngularUnit::HMS => {
+                let sign: f64 = value.signum();
+
                 let hrs = self.degree.checked_div(15).unwrap_or(0);
                 let leftover_mins = 4 * self.degree.checked_rem(15).unwrap_or(0);
                 let min = self.minute.checked_div(15).unwrap_or(0) as i16;
@@ -89,9 +92,8 @@ impl HasConvertableUnit for DMS {
                     + (min + leftover_mins) as f64 / 60.0
                     + (secs + leftover_secs) as f64 / 3600.0
                     + leftover_millis as f64 / (3600.0 * 1000.0);
-                Ok(hms_decimal)
+                Ok(sign * hms_decimal)
             }
-            _ => Err("not convertiable from DMS"),
         }
     }
 }
