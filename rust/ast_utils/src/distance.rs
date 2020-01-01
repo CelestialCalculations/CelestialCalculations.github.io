@@ -44,7 +44,6 @@ impl fmt::Display for DistanceUnit {
             DistanceUnit::LightYear => "light year",
             DistanceUnit::AstronomicalUnit => "astronomical unit",
             DistanceUnit::Parsec => "parsec",
-            _ => "unspecified",
         };
 
         write!(f, "{}", enum_label)
@@ -87,8 +86,8 @@ impl CanConvertUnit for DistanceConverter {
 
     fn convert<'a>(
         &self,
-        to_unit: DistanceUnit,
-    ) -> Result<Box<dyn HasConvertableUnit<Unit = DistanceUnit>>, &'a str> {
+        to_unit: Self::Unit,
+    ) -> Result<Box<dyn HasConvertableUnit<Unit = Self::Unit>>, &'a str> {
         if let Ok(val) = self.distance.as_ref().convert_scalar(&to_unit) {
             let converted_distance = DistanceFactory::build(val, to_unit);
 

@@ -78,12 +78,10 @@ impl HasConvertableUnit for HMS {
             AngularUnit::DMS => {
                 let sign: f64 = value.signum();
                 let secs = (self.second as f64) * 15.0;
-
                 let mins = (self.minute as f64) * 15.0;
+                let hrs = (self.hour as f64) * 15.0;
 
-                let hrs = ((self.hour as f64) * 15.0).rem_euclid(360.0);
-
-                let dms_decimal = hrs + mins / 60.0 + secs / 3600.0;
+                let dms_decimal = hrs.rem_euclid(360.0) + mins / 60.0 + secs / 3600.0;
 
                 Ok(sign * dms_decimal)
             }
