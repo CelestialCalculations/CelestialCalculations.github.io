@@ -2,15 +2,11 @@ use super::*;
 
 pub struct Meter {
     value: f64,
-    unit: DistanceUnit,
 }
 
 impl Meter {
     pub fn new(value: f64) -> Meter {
-        Meter {
-            value,
-            unit: DistanceUnit::Meter,
-        }
+        Meter { value }
     }
 }
 
@@ -21,11 +17,11 @@ impl HasConvertableUnit for Meter {
         self.value
     }
 
-    fn unit(&self) -> &DistanceUnit {
-        &self.unit
+    fn unit(&self) -> &Self::Unit {
+        &DistanceUnit::Meter
     }
 
-    fn convert_scalar<'a>(&self, to_unit: &DistanceUnit) -> Result<f64, &'a str> {
+    fn convert_scalar<'a>(&self, to_unit: &Self::Unit) -> Result<f64, &'a str> {
         let value = self.scalar();
 
         if value == 0.0 {

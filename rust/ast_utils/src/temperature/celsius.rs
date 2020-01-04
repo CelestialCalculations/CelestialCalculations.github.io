@@ -2,15 +2,11 @@ use super::*;
 
 pub struct Celsius {
     value: f64,
-    unit: TemperatureUnit,
 }
 
 impl Celsius {
     pub fn new(value: f64) -> Celsius {
-        Celsius {
-            value,
-            unit: TemperatureUnit::Celsius,
-        }
+        Celsius { value }
     }
 }
 
@@ -22,7 +18,7 @@ impl HasConvertableUnit for Celsius {
     }
 
     fn unit(&self) -> &Self::Unit {
-        &self.unit
+        &TemperatureUnit::Celsius
     }
 
     fn convert_scalar<'a>(&self, to_unit: &Self::Unit) -> Result<f64, &'a str> {

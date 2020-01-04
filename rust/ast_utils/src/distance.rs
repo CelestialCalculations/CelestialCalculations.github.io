@@ -1,21 +1,27 @@
 use crate::traits::*;
 use std::fmt;
 
+pub mod astronomical_unit;
 pub mod centimeter;
 pub mod feet;
 pub mod inch;
 pub mod kilometer;
+pub mod light_year;
 pub mod meter;
 pub mod mile;
 pub mod millimeter;
+pub mod parsec;
 
+pub use astronomical_unit::AstronomicalUnit;
 pub use centimeter::Centimeter;
 pub use feet::Feet;
 pub use inch::Inch;
 pub use kilometer::Kilometer;
+pub use light_year::LightYear;
 pub use meter::Meter;
 pub use mile::Mile;
 pub use millimeter::Millimeter;
+pub use parsec::Parsec;
 
 #[derive(Debug, PartialEq)]
 pub enum DistanceUnit {
@@ -65,7 +71,9 @@ impl DistanceFactory {
             DistanceUnit::Inch => Box::new(Inch::new(value)),
             DistanceUnit::Feet => Box::new(Feet::new(value)),
             DistanceUnit::Mile => Box::new(Mile::new(value)),
-            _ => panic!("unimplemented distance unit: {}", unit),
+            DistanceUnit::AstronomicalUnit => Box::new(AstronomicalUnit::new(value)),
+            DistanceUnit::LightYear => Box::new(LightYear::new(value)),
+            DistanceUnit::Parsec => Box::new(Parsec::new(value)),
         }
     }
 }
@@ -178,5 +186,27 @@ mod tests {
         let res = res.unwrap();
         assert!(is_close(1.0, res.scalar()));
         assert_eq!(&DistanceUnit::Mile, res.unit());
+    }
+
+    #[test]
+    fn test_distance_converter_from_km_to_au() {
+        let conv = DistanceConverter::new(1.0e9, DistanceUnit::Kilometer);
+        let res = conv.convert(DistanceUnit::AstronomicalUnit);
+
+        assert!(res.is_ok());
+        let res = res.unwrap();
+        assert!(is_close(6.685, res.scalar()));
+        assert_eq!(&DistanceUnit::AstronomicalUnit, res.unit());
+    }
+
+    #[test]
+    fn test_distance_converter_from_parsec_to_light_year() {
+        let conv = DistanceConverter::new(1.0, DistanceUnit::Parsec);
+        let res = conv.convert(DistanceUnit::LightYear);
+
+        assert!(res.is_ok());
+        let res = res.unwrap();
+        assert!(is_close(3.262, res.scalar()));
+        assert_eq!(&DistanceUnit::LightYear, res.unit());
     }
 }

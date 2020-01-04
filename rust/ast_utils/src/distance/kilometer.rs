@@ -38,6 +38,7 @@ impl HasConvertableUnit for Kilometer {
             DistanceUnit::Meter => Ok(value.pow10(3)),
             DistanceUnit::Kilometer => Ok(value),
             DistanceUnit::Mile => Ok(value / 1.609_344),
+            DistanceUnit::AstronomicalUnit => Ok(value * 6.685e-9),
             _ => Err("Can not convert from Kilometer"),
         }
     }
