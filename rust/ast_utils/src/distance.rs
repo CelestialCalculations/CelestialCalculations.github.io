@@ -78,7 +78,7 @@ impl DistanceFactory {
     }
 }
 
-struct DistanceConverter {
+pub struct DistanceConverter {
     distance: Box<dyn HasConvertableUnit<Unit = DistanceUnit>>,
 }
 

@@ -29,3 +29,9 @@ pub fn frac(x: f64) -> f64 {
 pub fn is_close(x: f64, y: f64) -> bool {
     (x - y).abs() <= EPS
 }
+
+/// rounds a floot upto scale places after comma
+pub fn floor(value: f64, scale: u8) -> f64 {
+    let multiplier = 10i64.pow(scale as u32) as f64;
+    (value * multiplier).floor() / multiplier
+}

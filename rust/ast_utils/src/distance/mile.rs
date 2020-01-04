@@ -31,8 +31,8 @@ impl HasConvertableUnit for Mile {
         match to_unit {
             DistanceUnit::Mile => Ok(value),
             DistanceUnit::Kilometer => Ok(value * 1.609_344),
-            DistanceUnit::LightYear => Ok(value * 5.87e-12),
-            DistanceUnit::AstronomicalUnit => Ok(value * 9.29e-7),
+            DistanceUnit::LightYear => Ok(value / 5.87e12),
+            DistanceUnit::AstronomicalUnit => Ok(value / 9.29e7),
             _ => Err("not convertable from Mile"),
         }
     }
@@ -61,10 +61,10 @@ mod tests {
 
     #[test]
     fn test_miles_to_light_year() {
-        let res = Mile::new(1.0e12).convert_scalar(&DistanceUnit::LightYear);
+        let res = Mile::new(9.3e7).convert_scalar(&DistanceUnit::LightYear);
 
         assert!(res.is_ok());
-        assert!(is_close(5.87, res.unwrap()));
+        assert!(is_close(1.5843e-5, res.unwrap()));
     }
 
     #[test]
@@ -72,6 +72,6 @@ mod tests {
         let res = Mile::new(1.0e7).convert_scalar(&DistanceUnit::AstronomicalUnit);
 
         assert!(res.is_ok());
-        assert!(is_close(9.29, res.unwrap()));
+        assert!(is_close(0.107_642_264, res.unwrap()), "res was {:?}", res);
     }
 }

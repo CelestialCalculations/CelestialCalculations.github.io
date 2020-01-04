@@ -29,7 +29,7 @@ impl HasConvertableUnit for Parsec {
             DistanceUnit::Kilometer => Ok(value * 3.086e13),
             DistanceUnit::Mile => Ok(value * 19.17e12),
             DistanceUnit::AstronomicalUnit => Ok(value * 2.063e5),
-            DistanceUnit::LightYear => Ok(value * 3.262),
+            DistanceUnit::LightYear => Ok(value * 3.261_564),
             _ => Err("not convertable from Parsec"),
         }
     }
@@ -77,6 +77,6 @@ mod tests {
         let res = Parsec::new(1.0).convert_scalar(&DistanceUnit::LightYear);
 
         assert!(res.is_ok());
-        assert!(is_close(3.262, res.unwrap()), "res was: {:?}", res);
+        assert!(is_close(3.261_564, res.unwrap()), "res was: {:?}", res);
     }
 }
