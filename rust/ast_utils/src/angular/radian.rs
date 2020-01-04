@@ -29,7 +29,6 @@ impl HasConvertableUnit for Radian {
             AngularUnit::Radian => Ok(value),
             AngularUnit::DMS => Ok((value * 180.0 / PI).rem_euclid(360.0)),
             AngularUnit::HMS => Ok((value * 12.0 / PI).rem_euclid(24.0)),
-            _ => Err("can not convert from Radian"),
         }
     }
 }

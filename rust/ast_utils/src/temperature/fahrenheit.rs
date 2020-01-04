@@ -2,15 +2,11 @@ use super::*;
 
 pub struct Fahrenheit {
     value: f64,
-    unit: TemperatureUnit, //TODO: seems it's redundant, refactor after integration tests
 }
 
 impl Fahrenheit {
     pub fn new(value: f64) -> Fahrenheit {
-        Fahrenheit {
-            value,
-            unit: TemperatureUnit::Fahrenheit,
-        }
+        Fahrenheit { value }
     }
 }
 
@@ -22,7 +18,7 @@ impl HasConvertableUnit for Fahrenheit {
     }
 
     fn unit(&self) -> &Self::Unit {
-        &self.unit
+        &TemperatureUnit::Fahrenheit
     }
 
     fn convert_scalar<'a>(&self, to_unit: &Self::Unit) -> Result<f64, &'a str> {
@@ -32,7 +28,6 @@ impl HasConvertableUnit for Fahrenheit {
             TemperatureUnit::Fahrenheit => Ok(value),
             TemperatureUnit::Celsius => Ok(5.0 / 9.0 * (value - 32_f64)),
             TemperatureUnit::Kelvin => Ok((459.67_f64 + value) * 5.0 / 9.0),
-            _ => Err("not convertable from Fahrenheit"),
         }
     }
 }

@@ -28,7 +28,6 @@ impl HasConvertableUnit for Celsius {
             TemperatureUnit::Celsius => Ok(value),
             TemperatureUnit::Fahrenheit => Ok(32.0_f64 + 9.0 / 5.0 * value),
             TemperatureUnit::Kelvin => Ok(273.15_f64 + value),
-            _ => Err("not convertable from Celsius"),
         }
     }
 }

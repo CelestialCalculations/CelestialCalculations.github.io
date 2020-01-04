@@ -2,15 +2,11 @@ use super::*;
 
 pub struct Feet {
     value: f64,
-    unit: DistanceUnit,
 }
 
 impl Feet {
     pub fn new(value: f64) -> Feet {
-        Feet {
-            value,
-            unit: DistanceUnit::Feet,
-        }
+        Feet { value }
     }
 }
 
@@ -21,11 +17,11 @@ impl HasConvertableUnit for Feet {
         self.value
     }
 
-    fn unit(&self) -> &DistanceUnit {
-        &self.unit
+    fn unit(&self) -> &Self::Unit {
+        &DistanceUnit::Feet
     }
 
-    fn convert_scalar<'a>(&self, to_unit: &DistanceUnit) -> Result<f64, &'a str> {
+    fn convert_scalar<'a>(&self, to_unit: &Self::Unit) -> Result<f64, &'a str> {
         let value = self.scalar();
 
         match to_unit {

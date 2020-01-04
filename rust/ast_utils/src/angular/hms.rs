@@ -121,6 +121,6 @@ mod tests {
     fn test_hms_to_dms_decimal() {
         let res = HMS::new(12, 30, 30).convert_scalar(&AngularUnit::DMS);
 
-        assert!(is_close(187.624_995, res.unwrap()), "res was {:?}", res);
+        assert!(is_close(187.625, res.unwrap()), "res was {:?}", res);
     }
 }
