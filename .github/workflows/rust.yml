@@ -1,6 +1,8 @@
 name: Rust
 
-on: [push]
+on:
+  push:
+    paths: [rust/**]
 
 jobs:
   build:
@@ -9,7 +11,7 @@ jobs:
 
     steps:
       - name: Change into Rust folder
-        run: cd rust/
+        run: cd rust/ && echo "move to the rust folder"
       - uses: actions/checkout@v1
       - name: Build
         run: cargo build --verbose
