@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Change into Rust folder
-        run: cd rust/ && echo "move to the rust folder"
       - uses: actions/checkout@v1
       - name: Build
         run: cargo build --verbose
+        working-directory: rust
       - name: Run tests
         run: cargo test --verbose
+        working-directory: rust
