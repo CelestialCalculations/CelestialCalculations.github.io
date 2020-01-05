@@ -206,7 +206,11 @@ mod tests {
 
         assert!(res.is_ok());
         let res = res.unwrap();
-        assert!(is_close(3.262, res.scalar()));
+        assert!(
+            is_close(3.261_564, res.scalar()),
+            "res was: {:?}",
+            res.scalar()
+        );
         assert_eq!(&DistanceUnit::LightYear, res.unit());
     }
 }

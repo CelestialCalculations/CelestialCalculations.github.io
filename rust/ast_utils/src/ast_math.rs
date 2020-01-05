@@ -6,7 +6,7 @@ const EPS: f64 = 0.000_000_05;
 ///
 /// # Example:
 /// ```
-/// use crate::ast_math;
+/// use ast_utils::ast_math::frac;
 ///
 /// frac(1.5_f64); // 0.5
 /// frac(-1.5_f64); // 0.5
@@ -22,7 +22,7 @@ pub fn frac(x: f64) -> f64 {
 ///
 /// # Example:
 /// ```
-/// use crate::ast_math::*;
+/// use ast_utils::ast_math::is_close;
 ///
 /// assert_eq!(true, is_close(0.5, 0.5));
 /// ```

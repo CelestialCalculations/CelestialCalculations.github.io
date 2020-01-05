@@ -39,13 +39,8 @@ impl HMS {
             seconds as u8,
         )
     }
-}
 
-impl HasConvertableUnit for HMS {
-    type Unit = AngularUnit;
-
-    // returns decimal format
-    fn scalar(&self) -> f64 {
+    pub fn to_decimal(&self) -> f64 {
         // step 1
         let sign = self.hour.signum();
         // step 2
@@ -63,6 +58,19 @@ impl HasConvertableUnit for HMS {
         let decimal_hrs = total_minutes / 60.0;
         // step 6 and 7
         (sign as f64) * (hrs + decimal_hrs)
+    }
+
+    pub fn to_tuple(&self) -> (i8, u8, u8) {
+        (self.hour, self.minute, self.second)
+    }
+}
+
+impl HasConvertableUnit for HMS {
+    type Unit = AngularUnit;
+
+    // returns decimal format
+    fn scalar(&self) -> f64 {
+        self.to_decimal()
     }
 
     fn unit(&self) -> &Self::Unit {

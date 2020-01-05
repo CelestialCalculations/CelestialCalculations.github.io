@@ -39,13 +39,8 @@ impl DMS {
             seconds as u8,
         )
     }
-}
 
-impl HasConvertableUnit for DMS {
-    type Unit = AngularUnit;
-
-    // returns decimal format
-    fn scalar(&self) -> f64 {
+    pub fn to_decimal(&self) -> f64 {
         // step.1
         let sign = self.degree.signum();
         // step.2
@@ -65,6 +60,20 @@ impl HasConvertableUnit for DMS {
 
         // step.6 & step.7
         (sign as f64) * (degree + decimal_degs)
+    }
+
+    // so stupid, it cant be accessed from the result of HasConvertableUnit.convert_scalar
+    pub fn to_tuple(&self) -> (i16, u8, u8) {
+        (self.degree, self.minute, self.second)
+    }
+}
+
+impl HasConvertableUnit for DMS {
+    type Unit = AngularUnit;
+
+    // returns decimal format
+    fn scalar(&self) -> f64 {
+        self.to_decimal()
     }
 
     // TODO: seems to be really redundant

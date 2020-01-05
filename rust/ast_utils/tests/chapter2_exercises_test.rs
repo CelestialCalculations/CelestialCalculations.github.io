@@ -1,5 +1,7 @@
+use ast_utils::angular::{self, AngularConverter, AngularUnit};
 use ast_utils::ast_math::{floor, is_close};
 use ast_utils::distance::{DistanceConverter, DistanceUnit};
+use ast_utils::temperature::{TemperatureConverter, TemperatureUnit};
 use ast_utils::traits::*;
 
 // TODO: type of result is too complicated - simplify the trait
@@ -10,6 +12,11 @@ fn assert_distance<'a>(
     assert!(res.is_ok());
     let res = res.unwrap();
     let rounded = floor(res.scalar(), 6);
+    assert!(is_close(expected_val, rounded), "res was: {}", rounded);
+}
+
+fn assert_approx(expected_val: f64, actual_val: f64) {
+    let rounded = floor(actual_val, 6);
     assert!(is_close(expected_val, rounded), "res was: {}", rounded);
 }
 
@@ -95,4 +102,102 @@ fn test_chapter2_ex12() {
     let u = DistanceConverter::new(10_000.0, DistanceUnit::Mile);
 
     assert_distance(1.07e-4, u.convert(DistanceUnit::AstronomicalUnit));
+}
+
+#[test]
+fn test_chapter2_ex13() {
+    let u = AngularConverter::new(180.0, AngularUnit::DMS);
+    let res = u.convert(AngularUnit::Radian);
+
+    assert!(res.is_ok());
+    let res = res.unwrap();
+    assert_approx(3.141_592, res.scalar());
+}
+
+#[test]
+fn test_chapter2_ex14() {
+    let u = AngularConverter::new(2.5, AngularUnit::Radian);
+    let res = u.convert(AngularUnit::DMS);
+
+    assert!(res.is_ok());
+    let res = res.unwrap();
+    assert_approx(143.239_444, res.scalar());
+}
+
+#[test]
+fn test_chapter2_ex15() {
+    let u = AngularConverter::new(2.0, AngularUnit::HMS);
+    let res = u.convert(AngularUnit::DMS);
+
+    assert!(res.is_ok());
+    let res = res.unwrap();
+    assert_approx(30.0, res.scalar());
+}
+
+#[test]
+fn test_chapter2_ex16() {
+    let u = AngularConverter::new(156.3, AngularUnit::DMS);
+    let res = u.convert(AngularUnit::HMS);
+
+    assert!(res.is_ok());
+    let res = res.unwrap();
+    assert_approx(10.419_722, res.scalar());
+}
+
+#[test]
+fn test_chapter2_ex17() {
+    let u = angular::HMS::new(10, 25, 11);
+
+    assert_approx(10.419_722, u.scalar());
+}
+
+#[test]
+fn test_chapter2_ex18() {
+    let u = angular::HMS::from_decimal(20.352);
+
+    assert_eq!((20, 21, 7), u.to_tuple());
+}
+
+#[test]
+fn test_chapter2_ex19() {
+    let u = angular::DMS::new(13, 4, 10);
+
+    assert_approx(13.069_444, u.scalar());
+}
+
+#[test]
+fn test_chapter2_ex20() {
+    let u = angular::DMS::from_decimal(-0.508_334);
+
+    assert_eq!((-0, 30, 30), u.to_tuple());
+}
+
+#[test]
+fn test_chapter2_ex21() {
+    let u = angular::DMS::new(300, 20, 0);
+
+    assert_approx(300.333_333, u.to_decimal());
+}
+
+#[test]
+fn test_chapter2_ex22() {
+    let u = angular::DMS::from_decimal(10.2958);
+
+    assert_eq!((10, 17, 44), u.to_tuple());
+}
+
+#[test]
+fn test_chapter2_ex23() {
+    let u = TemperatureConverter::new(100.0, TemperatureUnit::Celsius);
+    let res = u.convert(TemperatureUnit::Fahrenheit);
+
+    assert_approx(212.0, res.unwrap().scalar());
+}
+
+#[test]
+fn test_chapter2_ex24() {
+    let u = TemperatureConverter::new(32.0, TemperatureUnit::Fahrenheit);
+    let res = u.convert(TemperatureUnit::Celsius);
+
+    assert_approx(0.0, res.unwrap().scalar());
 }

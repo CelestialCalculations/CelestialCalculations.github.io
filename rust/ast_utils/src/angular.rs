@@ -5,9 +5,9 @@ pub mod dms;
 pub mod hms;
 pub mod radian;
 
-use dms::DMS;
-use hms::HMS;
-use radian::Radian;
+pub use dms::DMS;
+pub use hms::HMS;
+pub use radian::Radian;
 
 #[derive(Debug, PartialEq)]
 pub enum AngularUnit {
@@ -28,7 +28,7 @@ impl fmt::Display for AngularUnit {
     }
 }
 
-struct AngularFactory {}
+pub struct AngularFactory {}
 
 impl AngularFactory {
     pub fn build(value: f64, unit: AngularUnit) -> Box<dyn HasConvertableUnit<Unit = AngularUnit>> {
@@ -40,7 +40,7 @@ impl AngularFactory {
     }
 }
 
-struct AngularConverter {
+pub struct AngularConverter {
     angle: Box<dyn HasConvertableUnit<Unit = AngularUnit>>,
 }
 

@@ -5,9 +5,9 @@ pub mod celsius;
 pub mod fahrenheit;
 pub mod kelvin;
 
-use celsius::Celsius;
-use fahrenheit::Fahrenheit;
-use kelvin::Kelvin;
+pub use celsius::Celsius;
+pub use fahrenheit::Fahrenheit;
+pub use kelvin::Kelvin;
 
 #[derive(Debug, PartialEq)]
 pub enum TemperatureUnit {
@@ -28,7 +28,7 @@ impl fmt::Display for TemperatureUnit {
     }
 }
 
-struct TemperatureFactory {}
+pub struct TemperatureFactory {}
 
 impl TemperatureFactory {
     pub fn build(
@@ -43,7 +43,7 @@ impl TemperatureFactory {
     }
 }
 
-struct TemperatureConverter {
+pub struct TemperatureConverter {
     temperature: Box<dyn HasConvertableUnit<Unit = TemperatureUnit>>,
 }
 
