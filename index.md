@@ -8,7 +8,7 @@ Click on the following links for more information.
 
 * [Book Outline](https://CelestialCalculations.github.io/book-outline)
 
-* [Errata List](https://CelestialCalculations.github.io/errata-list)
+* [Errata List for the Book](https://CelestialCalculations.github.io/errata-list)
 
 * [Instructions](https://CelestialCalculations.github.io/instructions)
 
