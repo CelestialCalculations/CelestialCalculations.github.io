@@ -1,8 +1,6 @@
-<center>
 ## Celestial Calculations: A Gentle Introduction to Computational Astronomy
 ### Consolidated Errata
 ### September 17, 2020
-</center>
 Thanks to all who’ve contributed to this errata list. Just when you think you’ve found the last mistake...!
 
 The author can be contacted at jllmitpress@gmail.com should additional errors be found in the book requiring this errata list to be updated.
