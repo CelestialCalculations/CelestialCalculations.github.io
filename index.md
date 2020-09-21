@@ -10,6 +10,8 @@ Click on the following links for more information.
 
 * [Errata List for the Book](https://CelestialCalculations.github.io/errata-list)
 
+* [Errata List for the Book2](https://CelestialCalculations.github.io/errata.pdf)
+
 * [Instructions](https://CelestialCalculations.github.io/instructions)
 
 * [Preview Zip File's README.txt](https://CelestialCalculations.github.io/zipfile-readme.txt)
